@@ -350,7 +350,9 @@ class App():
     def get_reading(self):
         """Returns mass reading from strain gauge"""
         empty = 0
+        trials = 0
         while empty < 1:
+            trials += 1
             count, mode, inp = self.hx.get_reading()
             if type(inp) == type(None):
                 print 'empty reading'
@@ -359,6 +361,8 @@ class App():
             else:
                 empty = 1
                 print 'good reading'
+            if trials > 500:
+            	empty = 1
         if type(inp) != type(None):
             self.mass = round(((inp - self.c)/self.m),0)
         print self.mass
@@ -464,12 +468,12 @@ class App():
     def update_arrays(self):
         """Updates the arrays"""
         #add to arrays
-        self.tick = (self.time, self.raw, 0, self.new, self.cumul, self.tag, self.iD)
+        self.tick = [self.time, self.raw, 0, self.new, self.cumul, self.tag, self.iD]
         self.interval_data.append(self.tick)
         self.all_data.append(self.tick)
         db.add_data(self.all_data)
         #limit length of all data array
-        if self.counter > 10000:
+        if self.counter > 100000:
             self.all_data.pop(0)
 
 
