@@ -89,7 +89,7 @@ def main():
         lp.save_data(time, str(vol), str(last), str(new), str(cumul), status, fname)
         data.append((timestamp, vol, last, new, cumul, status))
 
-        times = (datetime.now() - datetime,fromtimestamp(0)).total_seconds()
+        times = (datetime.now() - datetime.fromtimestamp(0)).total_seconds()
 
         # TO BE INSERTED
         all_data.append((times, vol, last, new, cumul, status, iD))
