@@ -72,11 +72,11 @@ def add_data(all_data):
     while len(all_data) != 0:
         time,vol,last,new, cumul, status, pi_code = all_data[0]
 
-        time = str(time)
-        vol = str(round(float(str(vol)),1))
-        last = str(round(float(str(last)),1))
-        new = str(round(float(str(new)),1))
-        cumul = str(round(float(str(cumul)),1))
+        time = float(time)
+        vol = round(float(str(vol)),1)
+        last = round(float(str(last)),1)
+        new = round(float(str(new)),1)
+        cumul = round(float(str(cumul)),1)
         status = str(status)
         pi_code = str(pi_code)
 

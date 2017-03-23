@@ -89,8 +89,10 @@ def main():
         lp.save_data(time, str(vol), str(last), str(new), str(cumul), status, fname)
         data.append((timestamp, vol, last, new, cumul, status))
 
+        times = datetime.now().timestamp()
+
         # TO BE INSERTED
-        all_data.append((time, vol, last, new, cumul, status, iD))
+        all_data.append((times, vol, last, new, cumul, status, iD))
         # db.add_data(time, vol, last, new, cumul, status, iD) #sends data to database
         db.add_data(all_data)
 
