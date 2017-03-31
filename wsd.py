@@ -29,7 +29,6 @@ def main():
     iD, data, fname, hx, window,m,c = ws_init()
     tick = 0
 
-    all_data = []
     # Initializing, sleep for 3 seconds in test, 3 min in prod
     for x in range(0, 3):
         sleep(1) # 3 * 60)
@@ -91,10 +90,7 @@ def main():
 
         times = (datetime.now() - datetime.fromtimestamp(0)).total_seconds()
 
-        # TO BE INSERTED
-        all_data.append((times, vol, last, new, cumul, status, iD))
-        # db.add_data(time, vol, last, new, cumul, status, iD) #sends data to database
-        db.add_data(all_data)
+        db.add_data((times, vol, last, new, cumul, status, iD))
 
         window.update()
         tick += 1

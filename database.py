@@ -69,32 +69,31 @@ def add_pi(pi_code) :
 
 def add_data(all_data):
 
-    while len(all_data) != 0:
-        time,vol,last,new, cumul, status, pi_code = all_data[0]
+    time,vol,last,new, cumul, status, pi_code = all_data
 
-        time = round(float(time), 1) - 3600
-        vol = round(float(str(vol)),1)
-        last = round(float(str(last)),1)
-        new = round(float(str(new)),1)
-        cumul = round(float(str(cumul)),1)
-        status = str(status)
-        pi_code = str(pi_code)
+    time = round(float(time), 1) - 3600
+    vol = round(float(str(vol)),1)
+    last = round(float(str(last)),1)
+    new = round(float(str(new)),1)
+    cumul = round(float(str(cumul)),1)
+    status = str(status)
+    pi_code = str(pi_code)
 
 
-        # gets the pi_id from the records_pi table after matching the code
-        try:
-            cur.execute("""SELECT records_pi.id FROM records_pi WHERE records_pi.code = (%s) """,(pi_code,))
-            rows = cur.fetchall()
-            pi_id = str(rows[0][0])
-        except:
-            print("The Pi with that code does not exist")
+    # gets the pi_id from the records_pi table after matching the code
+    try:
+        cur.execute("""SELECT records_pi.id FROM records_pi WHERE records_pi.code = (%s) """,(pi_code,))
+        rows = cur.fetchall()
+        pi_id = str(rows[0][0])
+    except:
+        print("The Pi with that code does not exist")
 
-        # Inserts the row into the data table
-        try:
-            cur.execute("""INSERT INTO records_data(date_time,raw_vol, las_vol,new_vol, cum_vol, status, pi_id) VALUES(%s, %s, %s, %s, %s, %s, %s)""", (time,vol,last,new,cumul,status,pi_id))
-            all_data.pop(0)
-        except :
-            print("Error while inserting into records_data")
+    # Inserts the row into the data table
+    try:
+        cur.execute("""INSERT INTO records_data(date_time,raw_vol, las_vol,new_vol, cum_vol, status, pi_id) VALUES(%s, %s, %s, %s, %s, %s, %s)""", (time,vol,last,new,cumul,status,pi_id))
+        all_data.pop(0)
+    except :
+        print("Error while inserting into records_data")
 
 
 
