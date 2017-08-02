@@ -6,10 +6,10 @@ import psycopg2.extras
 
 
 # Final Database - Storing patient records
-DBNAME = 'd5nq5opbhumdlr'
-USER = 'kznrowmqsnyetc'
-PASSWORD = 'RRjBYCRf8crRhzrpHmk-HcPvnb'
-HOST = 'ec2-54-163-253-94.compute-1.amazonaws.com'
+DBNAME = 'd8b1o1r9gidjh0'
+USER = 'u82igt0qtftuee'
+PASSWORD = 'p2a86c1e8c0bdc274664b9fae1a3507a97a6d7c4be5b6475fa82996799202968a'
+HOST = 'ec2-34-230-191-133.compute-1.amazonaws.com'
 PORT = '5432'
 
 # Temporary Database - Testing
@@ -94,10 +94,6 @@ def add_data(all_data):
         all_data.pop(0)
     except :
         print("Error while inserting into records_data")
-
-
-
-
 
 
 
