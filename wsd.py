@@ -10,17 +10,11 @@ import database as db
 
 def ws_init():
     # Initalization:
-    #   Patient ID
-    #   List for data structure
-    #   File for syncing to wifi
-    #   hx object for data readings
-    #   Display window
-
-    iD = nt.gen_id()
-    data = []
-    fname = nt.init_file(iD)
-    (hx, m, c) = nt.init_scale()
-    window = nt.init_disp(iD)
+    iD = nt.gen_id()  # Patient ID
+    data = []  # List for data structure
+    fname = nt.init_file(iD)  # File for syncing to wifi
+    (hx, m, c) = nt.init_scale()  # hx object for data readings
+    window = nt.init_disp(iD)  # Display window
 
     # Return initialized instances
     return [iD, data, fname, hx, window, m, c]
@@ -37,26 +31,33 @@ def main():
 
     window.nametowidget("init").grid_remove()
 
-    prev_avg = 100000
-    prev_valid_avg = 1000000
-    processed = 0
-    avg_array = np.zeros(60)
-    prev_valid_index = 1
-
-    i = 59
-
     AVG = 50
     STD = 14
     LASTN = 60
     DIFF_MIN = -10
     DIFF_MAX = 10000
 
+    prev_avg = 100000
+    prev_valid_avg = 100000
+    prev_valid_index = 0
+    i = 0
+
+    avg_array = [100000]
+
+    processed = 0
+    new = 0
+    cumul = 0
+    last = 0
     table_data = []
-    reading = lp.get_reading(hx, m, c)
-    data.append((str(datetime.now())[:-7], 0, processed))
-    lp.generate_table(table_data, window.nametowidget("table"))
+    reading = lp.get_reading(hx, m, c)  # reading = mass registered by strain gauge
+    data.append((str(datetime.now())[:-7], 0, last, new, cumul,
+                 "init"))  # data added includes: datetime, raw, last volume, new (change), cumulative
+    lp.generate_table(table_data, window.nametowidget("table"))  # adds data to table on screen
 
     db.add_pi(iD)  # adds pi code to database
+
+    # avg_collect = []
+    # avg_collect.append(0)
 
     while nt.reset == 0:
         print
@@ -64,26 +65,36 @@ def main():
         # record every interval (1 second for test, 20 for prod)
         timestamp = datetime.now()
         reading = lp.get_reading(hx, m, c)
+        status = "raw"
 
-        # qc every 6 seconds for prod, 3 second for test
+        # new data processing every 1 second
 
+        if tick % 1 == 0 and tick > 0:
+            last_n = [x[1] for x in data[-(LASTN - 1):]]
+            last_n.append(reading)  # add new volume to list of readings
+            print(last_n)
 
-        if tick % 1 == 0 and tick > 0 and len(data) > LASTN:
-            last_sixty = [x[1] for x in data[-59:]]
-            last_sixty.append(reading)
-            print(last_sixty)
-            avg = np.mean(last_sixty)
-            std = np.std(last_sixty)
-            i = i + 1
+            avg = np.mean(last_n)  # new proposed volume is the mean of the last six
+            std = np.std(last_n)  # standard deviation of last six readings
+
             avg_array.append(avg)
 
-            if avg > AVG and std < STD and DIFF_MIN < avg - prev_avg < DIFF_MAX:
+            i += 1
+
+            status = "valid"
+
+            if len(avg_array) > LASTN and avg > AVG and std < STD and DIFF_MIN < avg - prev_avg < DIFF_MAX:
+                # if parameters are met, timepoint becomes new processed data point
+
 
                 if (avg - prev_valid_avg) > 10:
+
                     processed += avg - prev_valid_avg
 
                 elif avg < (0.9 * prev_valid_avg) and avg > 200:
+
                     marker = 0
+
                     if (i - prev_valid_index) > 300:
                         binary_array = np.zeros(i - 300 - prev_valid_index + 2)
                         for k in range(prev_valid_index, (i - 298)):
@@ -98,10 +109,14 @@ def main():
 
                     if marker == 1:
                         processed += avg - 200
+
                     else:
                         processed += avg - prev_avg
 
 
+
+                # find difference between average of most recent six points (1-6) and average of the set before that (0-5)
+                # add difference to previous processed point to get new processed data point (cumulative volume)
 
                 else:
                     processed += avg - prev_avg
@@ -109,29 +124,38 @@ def main():
                 prev_valid_avg = avg
                 prev_valid_index = i
 
-            prev_avg = avg
+
+                # prev_avg = avg
+
+            # if processed < 0: #if the new processed point is negative
+            #    processed = 0 #set processed back to zero
+
+            prev_avg = avg  # for the next iteration, this average becomes the "previous average" relative to the next timepoint
+
+            # difference will always be taken with respect to previous average, regardless of whether that point fell within parameters
 
         time = str(timestamp)[:-7]
-        raw = reading  # round(reading, 3)
+        vol = reading  # round(reading, 3)
         processed = round(processed, 3)
+        new = round(new, 3)
+        cumul = round(processed, 3)
 
         # update table every (hour (3 * 60 seconds) for prod, every 6 seconds for test)
         if tick % 6 == 0 and tick > 0:
-            table_data.append((time[11:], ' ' + str(raw), ' ' + str(processed)))
+            table_data.append((time[11:], ' ' + str(new), ' ' + str(cumul), ' ' + status))
             lp.generate_table(table_data, window.nametowidget("table"))
 
-        lp.save_data(time, str(raw), str(processed), fname)
-        data.append((timestamp, raw, processed))
+        lp.save_data(time, str(vol), str(last), str(new), str(cumul), status, fname)
+        data.append((timestamp, vol, last, new, cumul, status))
 
         times = (datetime.now() - datetime.fromtimestamp(0)).total_seconds()
 
-        db.add_data((times, raw, processed, iD))
+        db.add_data((times, vol, last, new, cumul, status, iD))
 
         window.update()
         tick += 1
         print
         "tick++\n"
-        # one second for test, 20 seconds for prod
         sleep(3)
 
     nt.quit(window)
