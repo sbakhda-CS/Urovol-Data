@@ -71,7 +71,6 @@ def main():
         # record every interval (1 second for test, 20 for prod)
         timestamp = datetime.now()
         reading = lp.get_reading(hx, m, c)
-        status = "raw"
 
         # new data processing every 1 second
 
@@ -144,12 +143,14 @@ def main():
         new = round(new, 3)
         cumul = round(processed, 3)
 
+
         # update table every (hour (3 * 60 seconds) for prod, every 6 seconds for test)
         if tick % 6 == 0 and tick > 0:
             table_data.append((time[11:], ' ' + str(new), ' ' + str(cumul), ' ' + status))
             lp.generate_table(table_data, window.nametowidget("table"))
 
         lp.save_data(time, str(vol), str(last), str(new), str(cumul), status, fname)
+        last, new,cumul = 0,0,0
         data.append((timestamp, vol, last, new, cumul, status))
 
         times = (datetime.now() - datetime.fromtimestamp(0)).total_seconds()
