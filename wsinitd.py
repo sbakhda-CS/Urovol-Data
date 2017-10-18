@@ -1,7 +1,4 @@
-#from hx711 import HX711
 from ADC import sensor
-import matplotlib.pyplot as plt
-import numpy as np
 import os
 from random import choice, random
 import string

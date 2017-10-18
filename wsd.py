@@ -2,7 +2,6 @@ import wsinloopd as lp
 import wsinitd as nt
 from time import sleep
 import numpy as np
-import Tkinter as tk
 from datetime import datetime
 import RPi.GPIO as GPIO
 import database as db

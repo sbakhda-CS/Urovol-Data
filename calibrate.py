@@ -1,5 +1,3 @@
-from ADC import sensor
-import pigpio
 import wsinitd as nt
 from time import sleep
 

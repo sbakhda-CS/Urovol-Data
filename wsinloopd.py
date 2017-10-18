@@ -3,13 +3,8 @@ matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from matplotlib.figure import Figure
-
-import numpy as np
-from subprocess import call
 import Tkinter as tk
 import mlbox as mlb
-import random
 from datetime import datetime
 
 def get_reading(hx, m, c):
