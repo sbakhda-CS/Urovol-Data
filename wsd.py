@@ -167,7 +167,7 @@ def main():
             else:
                 status = "pressed"
 
-        print "\n" + str(tuple([times, vol, last, new, cumul, status, iD])) + "\n"
+        print "\nTuple is " + str(tuple([times, vol, last, new, cumul, status, iD])) + "\n"
         db.add_data(tuple([times, vol, last, new, cumul, status, iD]))
 
         window.update()
