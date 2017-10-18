@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import time
+import pigpio
 # HX711.py
 # 2016-05-01
 # Public Domain
