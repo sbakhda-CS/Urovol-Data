@@ -27,6 +27,8 @@ def main():
     iD, data, fname, hx, window, m, c = ws_init()
     tick = 0
 
+    print "init done"
+
     # Initializing, sleep for 3 seconds in test, 3 min in prod
     for x in range(0, 3):
         sleep(1)  # 3 * 60)
@@ -63,7 +65,7 @@ def main():
     # avg_collect.append(0)
 
     pressed_array = []
-
+    print "entering while loop"
     while nt.reset == 0:
         print
         "reset: " + str(nt.reset) + "\n"
