@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+import time
 # HX711.py
 # 2016-05-01
 # Public Domain
