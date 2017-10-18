@@ -167,8 +167,7 @@ def main():
             else:
                 status = "pressed"
 
-        db.add_data((times, vol, last, new, cumul, status, iD))
-
+        db.add_data(tuple([times, vol, last, new, cumul, status, iD]))
 
         window.update()
         tick += 1
