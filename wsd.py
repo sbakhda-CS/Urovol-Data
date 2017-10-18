@@ -6,7 +6,7 @@ import Tkinter as tk
 from datetime import datetime
 import RPi.GPIO as GPIO
 import database as db
-
+TOUCH_SWITCH = 24
 
 def ws_init():
     # Initalization:
@@ -15,6 +15,9 @@ def ws_init():
     fname = nt.init_file(iD)  # File for syncing to wifi
     (hx, m, c) = nt.init_scale()  # hx object for data readings
     window = nt.init_disp(iD)  # Display window
+
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(TOUCH_SWITCH, GPIO.IN)
 
     # Return initialized instances
     return [iD, data, fname, hx, window, m, c]
@@ -59,6 +62,8 @@ def main():
     # avg_collect = []
     # avg_collect.append(0)
 
+    pressed_array = []
+
     while nt.reset == 0:
         print
         "reset: " + str(nt.reset) + "\n"
@@ -80,8 +85,6 @@ def main():
             avg_array.append(avg)
 
             i += 1
-
-            status = "valid"
 
             if len(avg_array) > LASTN and avg > AVG and std < STD and DIFF_MIN < avg - prev_avg < DIFF_MAX:
                 # if parameters are met, timepoint becomes new processed data point
@@ -150,7 +153,20 @@ def main():
 
         times = (datetime.now() - datetime.fromtimestamp(0)).total_seconds()
 
+        status = "init array"
+
+        pressed_array.append(not GPIO.input(TOUCH_SWITCH))
+        if len(pressed_array) == 11:
+            pressed_array.pop(0)
+            for pressed in pressed_array:
+                if not pressed:
+                    status = "not pressed"
+                    break
+            else:
+                status = "pressed"
+
         db.add_data((times, vol, last, new, cumul, status, iD))
+
 
         window.update()
         tick += 1
