@@ -150,7 +150,7 @@ def main():
             lp.generate_table(table_data, window.nametowidget("table"))
 
         lp.save_data(time, str(vol), str(last), str(new), str(cumul), status, fname)
-        last, new,cumul = 0,0,0
+
         data.append((timestamp, vol, last, new, cumul, status))
 
         times = (datetime.now() - datetime.fromtimestamp(0)).total_seconds()

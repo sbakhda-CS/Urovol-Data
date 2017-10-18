@@ -68,7 +68,7 @@ def add_pi(pi_code) :
 # def add_data(time,vol,last,new,cumul,status,pi_code) :
 
 def add_data(all_data):
-
+    print "length of tuple" + str(len(all_data))
     time,vol,last,new, cumul, status, pi_code = all_data
 
     time = round(float(time), 1) - 3600
