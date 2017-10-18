@@ -9,7 +9,6 @@ import numpy as np
 from subprocess import call
 import Tkinter as tk
 import mlbox as mlb
-import tktable as tktable
 import random
 from datetime import datetime
 
