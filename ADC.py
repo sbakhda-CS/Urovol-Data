@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-import time
-import pigpio
+
 # HX711.py
 # 2016-05-01
 # Public Domain
@@ -8,6 +7,10 @@ import pigpio
 CH_A_GAIN_64  = 0 # Channel A gain 64
 CH_A_GAIN_128 = 1 # Channel A gain 128
 CH_B_GAIN_32  = 2 # Channel B gain 32
+
+import time
+
+import pigpio # http://abyz.co.uk/rpi/pigpio/python.html
 
 class sensor:
 

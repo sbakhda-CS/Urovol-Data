@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "wsd.py", line 1, in <module>
+    import wsinloopd as lp
+  File "/home/pi/Desktop/gamma/wsinloopd.py", line 12, in <module>
+    import tktable as tktable
+ImportError: No module named tktable

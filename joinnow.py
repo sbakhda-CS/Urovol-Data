@@ -2,15 +2,17 @@
 
 import os
 import re
+import sys
 import dbus
 import uuid
 import urllib2
 import httplib
 import getpass
+import subprocess
 import xml.etree.ElementTree as ET
 from time import sleep
 from StringIO import StringIO
-from subprocess import Popen, PIPE
+from subprocess import Popen, PIPE, STDOUT
 from textwrap import wrap
 from hashlib import sha1
 from base64 import b64decode

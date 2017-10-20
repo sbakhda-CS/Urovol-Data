@@ -7,6 +7,43 @@ import RPi.GPIO as GPIO
 import database as db
 TOUCH_SWITCH = 24
 
+#GPIO.setup(TOUCH_SWITCH, GPIO.IN)
+
+#for sensor
+#import time
+#GPIO_TRIGGER = 25 #red
+#GPIO_ECHO = 23 #purple
+#
+#GPIO.setup(GPIO_TRIGGER, GPIO.OUT)
+#GPIO.setup(GPIO_ECHO, GPIO.IN)
+
+#def distance():
+#    # set Trigger to HIGH
+#    GPIO.output(GPIO_TRIGGER, True)
+# 
+#    # set Trigger after 0.01ms to LOW
+#    time.sleep(0.00001)
+#    GPIO.output(GPIO_TRIGGER, False)
+# 
+#    StartTime = time.time()
+#    StopTime = time.time()
+# 
+#    # save StartTime
+#    while GPIO.input(GPIO_ECHO) == 0:
+#        StartTime = time.time()
+# 
+#    # save time of arrival
+#    while GPIO.input(GPIO_ECHO) == 1:
+#        StopTime = time.time()
+# 
+#    # time difference between start and arrival
+#    TimeElapsed = StopTime - StartTime
+#    # multiply with the sonic speed (34300 cm/s)
+#    # and divide by 2, because there and back
+#    distance = (TimeElapsed * 34300) / 2
+# 
+#    return distance
+
 def ws_init():
     # Initalization:
     iD = nt.gen_id()  # Patient ID
@@ -45,6 +82,7 @@ def main():
     prev_valid_avg = 100000
     prev_valid_index = 0
     i = 0
+    status = "init status"
 
     avg_array = [100000]
 
@@ -86,7 +124,7 @@ def main():
 
             i += 1
 
-            if len(avg_array) > LASTN and avg > AVG and std < STD and DIFF_MIN < avg - prev_avg < DIFF_MAX:
+            if len(avg_array) > LASTN and avg > AVG and std < STD and DIFF_MIN < avg - prev_avg < DIFF_MAX and status == "pressed":
                 # if parameters are met, timepoint becomes new processed data point
 
 
@@ -157,7 +195,7 @@ def main():
 
         status = "init array"
 
-        pressed_array.append(not GPIO.input(TOUCH_SWITCH))
+        pressed_array.append((not GPIO.input(TOUCH_SWITCH)))# and distance() > 20)
         if len(pressed_array) == 11:
             pressed_array.pop(0)
             for pressed in pressed_array:
@@ -166,6 +204,8 @@ def main():
                     break
             else:
                 status = "pressed"
+        
+        
 
         print "\nTuple is " + str(tuple([times, vol, last, new, cumul, status, iD])) + "\n"
         db.add_data(tuple([times, vol, last, new, cumul, status, iD]))

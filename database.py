@@ -18,9 +18,10 @@ PORT = '5432'
 # PASSWORD = 'Dc2dad3DKM8fFovofn8otZ099p'
 # HOST = 'ec2-54-235-179-112.compute-1.amazonaws.com'
 # PORT = '5432'
-
+print "yo"
 #This connects to the database
 try:
+    print "connecting to db"
     conn = psycopg2.connect("\
     dbname = '" + DBNAME + "'       \
     user = '" + USER + "'           \
@@ -29,20 +30,21 @@ try:
     port = '" + PORT + "'           \
                    ")
     conn.autocommit = True
+    print "connected to db"
 except:
     print("Can't connect to the database :/ Check Wi-Fi.")
 
-
+print "wassup"
 # Defining the cursor
 try:
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 except:
     print("Error while importing psycopgy2")
 
-
+print "shikhar"
 # This adds the pi to the records_pi table
 def add_pi(pi_code) :
-
+    print "adding pi"	
     # this gets the RaspberryPi's MAC address
     try:
         str = open('/sys/class/net/eth0/address').read()
@@ -66,10 +68,9 @@ def add_pi(pi_code) :
 
 # This adds data to that particular pi
 # def add_data(time,vol,last,new,cumul,status,pi_code) :
-
+print "nad"
 def add_data(all_data):
-    print "length of tuple" + str(len(all_data)) + "\n"
-
+    print "adding data"
     time,vol,last,new, cumul, status, pi_code = all_data
 
     time = round(float(time), 1) - 3600

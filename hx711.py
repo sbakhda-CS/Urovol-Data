@@ -1,4 +1,6 @@
 import RPi.GPIO as GPIO
+import time
+
 
 def createBoolList(size=8):
     ret = []

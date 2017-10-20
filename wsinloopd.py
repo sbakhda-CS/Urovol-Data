@@ -1,10 +1,16 @@
-import matplotlib
-matplotlib.use('TkAgg')
-import matplotlib.pyplot as plt
+#import matplotlib
+#matplotlib.use('TkAgg')
+#import matplotlib.pyplot as plt
 
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+#from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+#from matplotlib.figure import Figure
+
+import numpy as np
+from subprocess import call
 import Tkinter as tk
 import mlbox as mlb
+#import tktable as tktable
+import random
 from datetime import datetime
 
 def get_reading(hx, m, c):
@@ -42,40 +48,4 @@ def generate_table(table_data, table):
     for item in table_data:
         mlbox.insert(0, item)
     mlbox.pack(expand=tk.YES,fill=tk.BOTH)
-
-def generate_graph(graph_data, graph):
-
-    intervals = 30*6 # 30 minutes * 6 ten second intervals?
-    M30_data = [x[1] for x in graph_data[-(intervals):]]
-    M30_time = [(intervals)-(datetime.now()-x[0]).total_seconds() for x in graph_data[-(intervals):]]
-    fig = plt.figure(1)
-    fig.suptitle('Volume in the past 30 minutes', fontsize=20)
-    plt.plot(M30_time, M30_data)
-    axes = plt.gca()
-    axes.set_xlim([0, intervals])
-    axes.set_ylim([0, 1])
-    plt.ylabel('Volume in mL')
-    #plt.xlabel('Number of 10 s intervals')
-    plt.close(fig)
-
-    for slave in graph.pack_slaves():
-        if slave.winfo_exists():
-            slave.destroy()
-
-    canvas = FigureCanvasTkAgg(fig, master=graph)
-    plot_widget = canvas.get_tk_widget()
-    plot_widget.pack(side=tk.RIGHT, expand=1)
-
-    volume_total = graph_data[-1][1] - graph_data[0][1]
-    volume_30 = M30_data[-1] - M30_data[0]
-
-    numbers = tk.Frame(graph, name="numbers")
-    numbers.pack(side=tk.LEFT)
-    tk.Label(numbers, text='Volume accumulated in 30 minutes:', font='-size 25').pack(anchor='center')
-    tk.Label(numbers, text="%.3f"%volume_30, font='-weight bold -size 50').pack(anchor='center')
-    
-    tk.Label(numbers, text='Volume accumulated total:', font='-size 25').pack(anchor='center')
-    tk.Label(numbers, text="%.3f"%volume_total, font='-weight bold -size 50').pack(anchor='center')
-
-
 
