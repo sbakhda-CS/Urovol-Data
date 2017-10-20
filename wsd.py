@@ -7,6 +7,8 @@ import RPi.GPIO as GPIO
 import database as db
 TOUCH_SWITCH = 24
 
+# github change
+
 #GPIO.setup(TOUCH_SWITCH, GPIO.IN)
 
 #for sensor
